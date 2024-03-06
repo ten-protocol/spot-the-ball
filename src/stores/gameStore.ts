@@ -20,7 +20,8 @@ export const useGameStore = defineStore('gameStore', {
     isGameActive: false,
     isGameRevealed: false,
     timeLeft: 0,
-    previousWins: [] as PreviousWins[]
+    previousWins: [] as PreviousWins[],
+    etherPrice: 0
   }),
 
   getters: {},
@@ -166,7 +167,7 @@ export const useGameStore = defineStore('gameStore', {
         const web3service = new Web3Service(walletStore.signer)
         const res = await web3service.getChallengePublicInfo()
         this.game = res
-        this.timeLeft = formatTimeAgo(bigNumberToNumber(res?.[4] || 0), false)
+        this.timeLeft = bigNumberToNumber(res?.[4])
         this.isGameActive = res?.[1]
         this.isGameRevealed = res?.[2]
       } catch (error) {
@@ -186,6 +187,17 @@ export const useGameStore = defineStore('gameStore', {
         const res = await web3service.getPreviousWins()
         this.previousWins = res
         return res
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    async fetchEtherPrice() {
+      const url = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+      try {
+        const response = await fetch(url)
+        const data = await response.json()
+        this.etherPrice = data.ethereum.usd
       } catch (error) {
         console.error(error)
       }

@@ -1,11 +1,8 @@
 <template>
-  <button
-    class="bg-slate-700 text-white rounded-lg py-1 px-4 text-[14px] flex items-center gap-2"
-    @click="connectMetamask"
-  >
+  <el-button @click="connectMetamask" type="primary" round plain>
     <img class="metamask-icon" src="@/assets/icons/icon_metamask.png" alt="MetaMask Fox" />
     {{ buttonText }}
-  </button>
+  </el-button>
 </template>
 
 <script>
@@ -111,6 +108,7 @@ export default {
 
     await gameStore.getHistory()
     await gameStore.getGame()
+    await gameStore.fetchEtherPrice()
   }
 }
 </script>

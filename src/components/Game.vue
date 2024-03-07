@@ -1,3 +1,42 @@
+
+<template>
+  <div class="max-w-[1300px] mx-auto w-full p-6">
+    <template v-if="game?.[0] && !gameRevealed">
+      <UserChallenge :game="game" :gameRevealed="gameRevealed" />
+    </template>
+    <template v-else>
+      <EmptyState />
+    </template>
+    <div
+      v-if="!gameRevealed && game[0]"
+      class="absolute border-[4px] border-white rounded-full"
+      ref="circleRef"
+      :style="{
+        width: `${circleSize}px`,
+        height: `${circleSize}px`,
+        top: `${mouseIsInImage ? `${relativeMouseY - circleSize / 2}px` : '50%'}`,
+        left: `${mouseIsInImage ? `${relativeMouseX - circleSize / 2}px` : '50%'}`,
+        transform: `${mouseIsInImage ? `` : 'translate(-50%,-50%)'}`
+      }"
+    ></div>
+    <template v-if="showPreviousMoves">
+      <template v-if="HISTORY">
+        <div
+          v-for="(move, index) in HISTORY"
+          :key="index"
+          class="absolute border-[4px] border-white rounded-full"
+          :style="{
+            width: `${circleSize}px`,
+            height: `${circleSize}px`,
+            top: `${move.y - circleSize / 2}px`,
+            left: `${move.x - circleSize / 2}px`,
+            background: 'rgba(255, 0, 0, 0.5)'
+          }"
+        ></div>
+      </template>
+    </template>
+  </div>
+</template>
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { useGameStore } from '../stores/gameStore'
@@ -5,6 +44,8 @@ import Web3Service from '../lib/web3service'
 import { useMessageStore } from '../stores/messageStore'
 import { useWalletStore } from '../stores/walletStore'
 import { CIRCLE_SIZE } from '../lib/utils'
+import EmptyState from './EmptyState.vue'
+import UserChallenge from './UserChallenge.vue'
 
 const gameStore = useGameStore()
 
@@ -105,76 +146,3 @@ const submit = async () => {
   gameStore.loading = false
 }
 </script>
-
-<template>
-  <div class="max-w-[1300px] mx-auto w-full px-4">
-    <div
-      class="w-[800px] mx-auto cursor-pointer relative"
-      ref="imageContainer"
-      @click="handleClick"
-      @mousemove="handleMouseMove"
-      @mouseover="handleMouseOver"
-      @mouseleave="handleMouseLeave"
-    >
-      <template v-if="game?.[0] && !gameRevealed">
-        <img
-          :src="game[0]"
-          alt="Spot the ball"
-          :class="{ 'w-full block': game, 'cursor-not-allowed': gameRevealed }"
-        />
-      </template>
-      <template v-else>
-        <div class="w-full h-[500px] bg-gray-200 cursor-not-allowed relative">
-          <div class="flex items-center justify-center h-full">
-            <p class="text-2xl">No challenge available</p>
-            <div
-              v-if="!isUserConnected"
-              class="absolute top-0 left-0 w-full h-full flex items-center justify-center"
-            >
-              <div class="bg-white p-8 rounded-lg">
-                <p>
-                  You are not connected to Ten! Connect at
-                  <a
-                    href="https://testnet.ten.xyz/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-blue-500 underline"
-                    >https://testnet.ten.xyz/</a
-                  >
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </template>
-      <div
-        v-if="!gameRevealed && game[0]"
-        class="absolute border-[4px] border-white rounded-full"
-        ref="circleRef"
-        :style="{
-          width: `${circleSize}px`,
-          height: `${circleSize}px`,
-          top: `${mouseIsInImage ? `${relativeMouseY - circleSize / 2}px` : '50%'}`,
-          left: `${mouseIsInImage ? `${relativeMouseX - circleSize / 2}px` : '50%'}`,
-          transform: `${mouseIsInImage ? `` : 'translate(-50%,-50%)'}`
-        }"
-      ></div>
-      <template v-if="showPreviousMoves">
-        <template v-if="HISTORY">
-          <div
-            v-for="(move, index) in HISTORY"
-            :key="index"
-            class="absolute border-[4px] border-white rounded-full"
-            :style="{
-              width: `${circleSize}px`,
-              height: `${circleSize}px`,
-              top: `${move.y - circleSize / 2}px`,
-              left: `${move.x - circleSize / 2}px`,
-              background: 'rgba(255, 0, 0, 0.5)'
-            }"
-          ></div>
-        </template>
-      </template>
-    </div>
-  </div>
-</template>

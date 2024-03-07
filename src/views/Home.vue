@@ -6,37 +6,55 @@
       </el-header>
       <el-main>
         <div class="flex justify-between items-center gap-4">
-          <el-card style="max-width: 480px" class="flex flex-col items-center justify-center">
-            <p>ETH Balance (Total pool)</p>
-            <h1 class="font-bold text-4xl brand-text">
-              {{ isUserConnected ? prizePool : '-' }} ETH
-            </h1>
-            <p class="text-12 text-center">
-              {{ isUserConnected ? etherPrice + '/1 USD' : 'Connect Wallet to View Total Pool' }}
-            </p>
-          </el-card>
-          <div>
-            <el-card style="max-width: 480px" class="flex flex-col items-center justify-center">
-              <template v-if="isUserConnected">
-                <h1 class="font-bold text-4xl">
-                  <el-countdown :value="timeLeft" />
+          <el-card style="max-width: 480px">
+            <div class="flex items-center justify-between">
+              <div class="-ml-6">
+                <img src="/assets/images/encrypted-ethereum-logo.png" alt="Ethereum Logo" />
+              </div>
+              <div class="flex flex-col items-center">
+                <p>ETH Balance (Total pool)</p>
+                <h1 class="font-bold text-4xl brand-text">
+                  {{ isUserConnected ? prizePool : '-' }} ETH
                 </h1>
-                <small class="text-12">Time Remaining</small>
-              </template>
-              <template v-else>
-                <h1 class="font-bold text-4xl brand-text">-</h1>
-                <small class="text-10">Connect Wallet to View Count Down</small>
-              </template>
+                <p class="text-12 text-center">
+                  {{
+                    isUserConnected
+                      ? etherPrice + ' ETH/1 USD'
+                      : 'Connect Wallet to View Total Pool'
+                  }}
+                </p>
+              </div>
+            </div>
+          </el-card>
+          <div class="flex flex-col items-center gap-4">
+            <el-card style="width: 280px">
+              <div class="flex items-center justify-between">
+                <div class="flex flex-col items-center">
+                  <template v-if="isUserConnected">
+                    <h1 class="font-bold text-4xl">
+                      <el-countdown :value="Date.now() + 1000 * timeLeft" />
+                    </h1>
+                    <small class="text-12">Time Remaining</small>
+                  </template>
+                  <template v-else>
+                    <h1 class="font-bold text-4xl brand-text">-</h1>
+                    <small class="text-10">Connect Wallet to View Count Down</small>
+                  </template>
+                </div>
+                <div class="-mr-6 -mt-6 ml-3">
+                  <img src="/assets/images/checking-data.png" alt="Checking Data" />
+                </div>
+              </div>
             </el-card>
 
-            <div class="flex items-center gap-2 text-sm">
+            <div class="flex items-center gap-2 text-sm pt-2">
               <input
                 type="checkbox"
                 @change="showPreviousMoves"
                 :disabled="!gameActive"
                 :class="{ 'cursor-not-allowed': !gameActive }"
               />
-              <label>Previous moves</label>
+              <label class="font-bold">Previous moves</label>
             </div>
           </div>
         </div>
@@ -73,7 +91,7 @@ export default {
   setup() {
     const gameStore = useGameStore()
     const prizePool = ref(gameStore.game?.[3])
-    const timeLeft = ref(Date.now() + 1000 * gameStore.timeLeft)
+    const timeLeft = ref(gameStore.timeLeft)
     const etherPrice = ref(gameStore.etherPrice)
     const gameActive = ref(false)
     const isUserConnected = ref(gameStore.isUserConnected)
@@ -84,6 +102,7 @@ export default {
 
     watchEffect(() => {
       prizePool.value = formatEther(gameStore.game?.[3] || 0)
+      timeLeft.value = gameStore.timeLeft
       gameActive.value = gameStore.isGameActive
       isUserConnected.value = gameStore.isUserConnected
       etherPrice.value = gameStore.etherPrice

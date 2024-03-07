@@ -134,11 +134,6 @@
     -moz-background-clip: text;
     -moz-text-fill-color: transparent;
   }
-
-  .el-statistic__content span.el-statistic__number {
-    font-size: 32px !important;
-    line-height: 48px !important;
-  }
 }
 
 .theme-slate {

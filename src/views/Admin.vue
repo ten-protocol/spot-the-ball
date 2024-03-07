@@ -36,7 +36,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useGameStore } from '../stores/gameStore'
-import Challenge from '../components/Challenge.vue'
+import Challenge from '../components/AdminChallenge.vue'
 import AdminHeader from '../components/AdminHeader.vue'
 import Web3Service from '../lib/web3service'
 import { useWalletStore } from '../stores/walletStore'

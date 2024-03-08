@@ -46,7 +46,7 @@ export default class Web3Service {
 
   async submitGuess(challengeId, [coordinateX, coordinateY]) {
     // ensuring that coordinatex and coordinatey are not fractional components but whole numbers
-    const updatedCoordinates = [Math.round(coordinateX), Math.round(coordinateY)]
+    const updatedCoordinates = [coordinateX, coordinateY]
 
     const entryCost = ethers.utils.parseEther(Common.ENTRY_COST)
     const messageStore = useMessageStore()

@@ -22,7 +22,8 @@ const emit = defineEmits()
 const fileInput = ref<HTMLInputElement | null>(null)
 const imageContainer = ref()
 const errorMessage = ref('')
-const selectCoordinates = ref(false)
+const coordinatesSelected = ref(false)
+const selectCoordinates = ref(true)
 const selectedFiles = ref<FileWithPreview[]>([])
 const position = ref({ x1: 0, x2: 0, y1: 0, y2: 0 })
 const center = ref({ x: 0, y: 0 })
@@ -74,10 +75,25 @@ const handleDrop = (event: DragEvent) => {
   }
 }
 
-const handleClick = () => {
+const select = () => {
+  selectCoordinates.value = !selectCoordinates.value
+
+  if (selectCoordinates.value) {
+    coordinatesSelected.value = false
+  }
+}
+
+const handleClick = (event: MouseEvent) => {
+  event.preventDefault()
   if (mouse.isOutside) {
     return
   }
+
+  if (!selectCoordinates.value) {
+    return
+  }
+
+  coordinatesSelected.value = true
 
   position.value.x1 = mouse.elementX - CIRCLE_SIZE / 2
   position.value.x2 = position.value.x1 + CIRCLE_SIZE
@@ -95,6 +111,9 @@ const handleClick = () => {
     errorMessage.value = "Can't place the circle outside the image. Please select a valid position"
     return
   }
+
+  errorMessage.value = ''
+  selectCoordinates.value = false
 
   emit('positionChange', position.value)
   emit('centerChange', center.value)
@@ -166,6 +185,11 @@ const handleClick = () => {
         </div>
 
         <div class="w-full mt-4 flex flex-col gap-4" v-if="selectedFiles[0]">
+          <div>
+            <el-button type="primary" @click="select" :disabled="selectCoordinates">
+              Select Coordinates</el-button
+            >
+          </div>
           <el-alert :title="errorMessage" type="error" class="font-bold" v-if="errorMessage" />
           <el-card class="w-[800px] mx-auto relative overflow-hidden rounded-lg cursor-grab">
             <div ref="imageContainer">
@@ -180,9 +204,16 @@ const handleClick = () => {
               :style="{
                 width: `${CIRCLE_SIZE}px`,
                 height: `${CIRCLE_SIZE}px`,
-                top: `${mouse.isOutside ? '50%' : `${mouse.elementY - CIRCLE_SIZE / 2}px`}`,
-                left: `${mouse.isOutside ? '50%' : `${mouse.elementX - CIRCLE_SIZE / 2}px`}`,
-                transform: `${mouse.isOutside ? 'translate(-50%,-50%)' : ''}`
+                top: `${
+                  coordinatesSelected
+                    ? `${center.y - CIRCLE_SIZE / 2}px`
+                    : `${mouse.elementY - CIRCLE_SIZE / 2}px`
+                }`,
+                left: `${
+                  coordinatesSelected
+                    ? `${center.x - CIRCLE_SIZE / 2}px`
+                    : `${mouse.elementX - CIRCLE_SIZE / 2}px`
+                }`
               }"
               @click="handleClick"
             ></div>

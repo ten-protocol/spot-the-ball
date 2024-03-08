@@ -83,7 +83,6 @@ export default {
   },
   async mounted() {
     const provider = await detectEthereumProvider()
-    const messageStore = useMessageStore()
     const walletStore = useWalletStore()
     const gameStore = useGameStore()
 

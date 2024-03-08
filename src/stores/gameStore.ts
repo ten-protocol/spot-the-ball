@@ -6,6 +6,7 @@ import { useWalletStore } from '../stores/walletStore'
 import { useMessageStore } from '../stores/messageStore'
 import { Challenge, FormattedChallenge, Game, PreviousWins } from '../types.js'
 import { MORALIS_API_KEY, NFT_UP_API_KEY, bigNumberToNumber, formatTimeAgo } from '../lib/utils.js'
+import { ElNotification } from 'element-plus'
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
@@ -46,7 +47,11 @@ export const useGameStore = defineStore('gameStore', {
       const messageStore = useMessageStore()
       try {
         if (!walletStore.signer) {
-          messageStore.addMessage('Not connected with Metamask...')
+          ElNotification({
+            title: 'Error',
+            message: 'Not connected with Metamask...',
+            type: 'error'
+          })
           return
         }
         const web3service = new Web3Service(walletStore.signer)
@@ -104,7 +109,11 @@ export const useGameStore = defineStore('gameStore', {
       const messageStore = useMessageStore()
       try {
         if (!walletStore.signer) {
-          messageStore.addMessage('Not connected with Metamask...')
+          ElNotification({
+            title: 'Error',
+            message: 'Not connected with Metamask...',
+            type: 'error'
+          })
           return
         }
         const web3service = new Web3Service(walletStore.signer)
@@ -161,7 +170,11 @@ export const useGameStore = defineStore('gameStore', {
       const messageStore = useMessageStore()
       try {
         if (!walletStore.signer) {
-          messageStore.addMessage('Not connected with Metamask...')
+          ElNotification({
+            title: 'Error',
+            message: 'Not connected with Metamask...',
+            type: 'error'
+          })
           return
         }
         const web3service = new Web3Service(walletStore.signer)
@@ -180,7 +193,11 @@ export const useGameStore = defineStore('gameStore', {
         const walletStore = useWalletStore()
         const messageStore = useMessageStore()
         if (!walletStore.signer) {
-          messageStore.addMessage('Not connected with Metamask...')
+          ElNotification({
+            title: 'Error',
+            message: 'Not connected with Metamask...',
+            type: 'error'
+          })
           return
         }
         const web3service = new Web3Service(walletStore.signer)

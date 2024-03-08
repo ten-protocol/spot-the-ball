@@ -32,9 +32,14 @@ export default {
         const chainId = await provider.request({ method: 'eth_chainId' })
         if (chainId !== '0x1bb') {
           gameStore.isUserConnected = false
-          messageStore.addMessage(
-            'Not connected to Ten ! Connect at <a href="https://testnet.ten.xyz/" target="_blank" rel="noopener noreferrer">https://testnet.ten.xyz/</a> '
-          )
+
+          this.$notify({
+            title: 'Wrong Network',
+            dangerouslyUseHTMLString: true,
+            message:
+              'Not connected to Ten ! Connect at <a href="https://testnet.ten.xyz/" target="_blank" rel="noopener noreferrer">https://testnet.ten.xyz/</a> ',
+            type: 'info'
+          })
           buttonText.value = 'Wrong Network, Switch to Ten'
           return
         }
@@ -52,7 +57,11 @@ export default {
           value: accounts[0]
         })
 
-        messageStore.addMessage('Connected to wallet ! Account: ' + accounts[0])
+        this.$notify({
+          title: 'Connected',
+          message: 'Connected to wallet ! Account: ' + accounts[0],
+          type: 'success'
+        })
         buttonText.value = 'Connected!'
 
         new Web3Service(walletStore.signer, Common.CONTRACT_ADDRESS)
@@ -61,7 +70,11 @@ export default {
         await gameStore.getHistory()
         await gameStore.getGame()
       } else {
-        messageStore.addMessage('Please install MetaMask!')
+        this.$notify({
+          title: 'MetaMask not found',
+          message: 'Please install MetaMask!',
+          type: 'error'
+        })
       }
     }
 
@@ -79,9 +92,13 @@ export default {
     const chainId = await provider.request({ method: 'eth_chainId' })
     if (chainId !== '0x1bb') {
       gameStore.isUserConnected = false
-      messageStore.addMessage(
-        'Not connected to Ten ! Connect at <a href="https://testnet.ten.xyz/" target="_blank" rel="noopener noreferrer">https://testnet.ten.xyz/</a> '
-      )
+      this.$notify({
+        title: 'Wrong Network',
+        dangerouslyUseHTMLString: true,
+        message:
+          'Not connected to Ten ! Connect at <a href="https://testnet.ten.xyz/" target="_blank" rel="noopener noreferrer">https://testnet.ten.xyz/</a> ',
+        type: 'info'
+      })
       buttonText.value = 'Wrong Network, Switch to Ten'
       return
     }
@@ -94,12 +111,20 @@ export default {
         if (accounts.length !== 0) {
           walletStore.setProvider(provider)
           walletStore.setAddress(accounts[0])
-          messageStore.addMessage('Connected to wallet ! Account: ' + accounts[0])
+          this.$notify({
+            title: 'Connected',
+            message: 'Connected to wallet ! Account: ' + accounts[0],
+            type: 'success'
+          })
           this.buttonText = 'Connected!'
           new Web3Service(walletStore.signer, Common.CONTRACT_ADDRESS)
           new Web3listener(walletStore.signer, Common.CONTRACT_ADDRESS)
         } else {
-          messageStore.addMessage('No wallet connected...')
+          this.$notify({
+            title: 'No wallet connected',
+            message: 'No wallet connected...',
+            type: 'error'
+          })
         }
       })
       .catch((error) => {

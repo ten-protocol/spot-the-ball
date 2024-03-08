@@ -1,67 +1,90 @@
-<!-- <template>
-  <el-card
-    class="w-[800px] mx-auto cursor-pointer relative overflow-hidden rounded-lg shadow-lg bg-white"
-    ref="imageContainer"
-  >
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
+import { useMouse, useMouseInElement } from '@vueuse/core'
+import { CIRCLE_SIZE } from '../lib/utils'
+import Web3Service from '../lib/web3service'
+import { useGameStore } from '../stores/gameStore'
+import { useMessageStore } from '../stores/messageStore'
+import { useWalletStore } from '../stores/walletStore'
+
+defineProps<{
+  game: string[]
+  gameRevealed: boolean
+  showPreviousMoves: boolean
+  history: { x: number; y: number; win: boolean }[]
+}>()
+
+const imageContainer = ref()
+const circleSize = CIRCLE_SIZE
+
+const gameStore = useGameStore()
+const messageStore = useMessageStore()
+const walletStore = useWalletStore()
+
+const mouse = reactive(useMouseInElement(imageContainer))
+
+const submit = async () => {
+  if (mouse.isOutside) {
+    return
+  }
+  gameStore.loading = true
+  try {
+    if (!walletStore.signer) {
+      this.$notify({
+        title: 'Not connected with Metamask',
+        message: 'Please connect with Metamask to submit your guess',
+        type: 'error'
+      })
+      gameStore.loading = false
+      return
+    }
+    const web3Service = new Web3Service(walletStore.signer)
+    const challengeId = await web3Service.getChallengeId()
+    const payload = [challengeId, [mouse.elementX, mouse.elementY]]
+    const res = await web3Service.submitGuess(...payload)
+    if (res) {
+      gameStore.showModal('', res)
+    }
+  } catch (err) {
+    console.error('Error submitting guess:', err.message)
+  }
+  gameStore.loading = false
+}
+</script>
+
+<template>
+  <el-card class="w-[800px] mx-auto relative overflow-hidden rounded-lg cursor-pointer">
     <img
       :src="game[0]"
       alt="Spot the ball"
       :class="{ 'w-full h-full block': game, 'cursor-not-allowed': gameRevealed }"
+      ref="imageContainer"
     />
+    <div
+      v-if="!gameRevealed && game[0] && !gameStore.loading"
+      class="absolute border-[4px] border-white rounded-full"
+      :style="{
+        width: `${circleSize}px`,
+        height: `${circleSize}px`,
+        top: `${mouse.isOutside ? '50%' : `${mouse.elementY - circleSize / 2}px`}`,
+        left: `${mouse.isOutside ? '50%' : `${mouse.elementX - circleSize / 2}px`}`,
+        transform: `${mouse.isOutside ? 'translate(-50%,-50%)' : ''}`
+      }"
+      @click="submit"
+    ></div>
+    <template v-if="showPreviousMoves && history">
+      <div
+        v-for="(move, index) in history"
+        :key="index"
+        class="absolute border-[4px] border-white rounded-full"
+        :style="{
+          width: `${circleSize}px`,
+          height: `${circleSize}px`,
+          top: `${move.y - circleSize / 2}px`,
+          left: `${move.x - circleSize / 2}px`,
+          background: move.win === true ? 'hsl(var(--success)' : 'hsl(var(--destructive)'
+        }"
+      ></div>
+    </template>
   </el-card>
-</template>
-
-<script>
-import { reactive } from 'vue'
-import { useMouse, useParentElement } from '@vueuse/core'
-// import type { UseMouseEventExtractor } from '@vueuse/core'
-
-export default {
-  name: 'UserChallenge',
-  props: {
-    game: {
-      type: Array,
-      required: true
-    },
-    gameRevealed: {
-      type: Boolean,
-      required: true
-    }
-  },
-  setup() {
-    const parentEl = useParentElement()
-
-    const extractor = (event) => {
-      if (typeof Touch !== 'undefined' && event instanceof Touch) return null
-      else return [event.offsetX, event.offsetY]
-    }
-
-    const { x, y, sourceType } = reactive(useMouse({ target: parentEl, type: extractor }))
-  }
-}
-</script> -->
-
-<script setup lang="ts">
-import { reactive } from 'vue'
-import { useMouse, useParentElement } from '@vueuse/core'
-import type { UseMouseEventExtractor } from '@vueuse/core'
-
-const parentEl = useParentElement()
-
-const mouseDefault = reactive(useMouse())
-
-const extractor: UseMouseEventExtractor = (event) => {
-  if (typeof Touch !== 'undefined' && event instanceof Touch) return null
-  else return [event.offsetX, event.offsetY]
-}
-
-const mouseWithExtractor = reactive(useMouse({ target: parentEl, type: extractor }))
-console.log('🚀 ~ mouseWithExtractor:', mouseWithExtractor)
-</script>
-
-<template>
-  <p>Basic Usage</p>
-  <pre lang="yaml">{{ textDefault }}</pre>
-  <p>Extractor Usage</p>
-  <pre lang="yaml">{{ textWithExtractor }}</pre>
 </template>

@@ -6,6 +6,7 @@ import { formatTimeAgo, trackEvent, bigNumberToNumber } from './utils'
 import Common from '@/lib/common'
 import Web3listener from './web3listener'
 import { useGameStore } from '../stores/gameStore'
+import { ElNotification } from 'element-plus'
 
 export default class Web3Service {
   constructor(signer) {
@@ -50,7 +51,10 @@ export default class Web3Service {
     const entryCost = ethers.utils.parseEther(Common.ENTRY_COST)
     const messageStore = useMessageStore()
 
-    messageStore.addMessage('Issuing Guess...')
+    // ElNotification({
+    //   message: 'Issuing Guess...',
+    //   type: 'info'
+    // })
 
     try {
       const submitTx = await this.contract.submitGuess(challengeId, updatedCoordinates, {
@@ -58,24 +62,38 @@ export default class Web3Service {
         gasLimit: ethers.utils.hexlify(3000000)
       })
       const receipt = await submitTx.wait()
-      messageStore.addMessage('Issued Guess tx: ' + receipt.transactionHash)
+      // ElNotification({
+      //   title: 'Issued Guess tx:'
+      //   message: receipt.transactionHash,
+      //   type: 'success'
+      // })
 
       const web3listener = new Web3listener(this.signer)
       web3listener.startCheckingGuesses(receipt)
 
       const message = `Your guess has been submitted successfully! The winners will be announced in ${formatTimeAgo(bigNumberToNumber(receipt.events[0].args[4] || 0), false)}...`
-      messageStore.addMessage(message)
+      // ElNotification({
+      //   message,
+      //   type: 'success'
+      //   duration: 0,
+      // })
 
       return message
     } catch (e) {
       if (e.reason) {
-        messageStore.addMessage('Failed to issue Guess - ' + e.reason + ' ...')
-        console.error('Failed to issue Guess - ', e)
+        // ElNotification({
+        //   message: 'Failed to issue Guess - ' + e.reason,
+        //   type: 'error'
+        // })
+        console.error('Failed to issue Guess - ', e.reason)
         return
       }
-      messageStore.addMessage(
-        'Failed to issue Guess - unexpected error occurred, check the console logs...'
-      )
+
+      // ElNotification({
+      //   message:
+      //   'Failed to issue Guess - ' + e,
+      //   type: 'error'
+      // })
       console.error('Failed to issue Guess - ', e)
     }
   }

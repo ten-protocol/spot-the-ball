@@ -1,6 +1,6 @@
 <template>
   <div class="relative mt-4">
-    <el-empty description=" " image="/assets/images/meeting-landscape.png" image-size="800px" />
+    <el-empty description=" " image="/assets/images/meeting-landscape.png" image-size="800" />
 
     <!-- Dark transparent cover -->
     <div class="absolute inset-0 bg-black opacity-70"></div>

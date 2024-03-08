@@ -60,7 +60,7 @@
         </div>
 
         <Game />
-        <History />
+        <UserGameData />
 
         <!-- adding admin link to navigate to admin page b'cos using gh-pages w/ SPAs doesn't work well -->
         <router-link to="/admin" class="fixed bottom-4 right-4">
@@ -78,7 +78,7 @@ import { ref, watchEffect } from 'vue'
 import { formatEther } from 'ethers/lib/utils'
 import Game from '../components/Game.vue'
 import Header from '../components/Header.vue'
-import History from '../components/History.vue'
+import UserGameData from '../components/UserGameData.vue'
 import { useGameStore } from '../stores/gameStore'
 
 export default {
@@ -86,7 +86,7 @@ export default {
   components: {
     Game,
     Header,
-    History
+    UserGameData
   },
   setup() {
     const gameStore = useGameStore()

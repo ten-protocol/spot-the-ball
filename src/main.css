@@ -31,13 +31,13 @@
     --accent: 210 40% 96.1%;
     --accent-foreground: 6, 61%, 64%;
 
-    --success: 120 63% 31%;
+    --success: 169, 54%, 54%;
     --success-foreground: 210 40% 98%;
 
     --warning: 45 80% 50%;
     --warning-foreground: 0 0% 20%;
 
-    --destructive: 0 100% 50%;
+    --destructive: 0, 84%, 69%;
     --destructive-foreground: 210 40% 98%;
 
     --ring: 215 20.2% 65.1%;
@@ -76,13 +76,13 @@
     --secondary: 6, 61%, 64%;
     --secondary-foreground: 210 40% 98%;
 
-    --success: 120 63% 31%;
+    --success: 169, 54%, 54%;
     --success-foreground: 210 40% 98%;
 
     --warning: 45 80% 40%;
     --warning-foreground: 0 0% 80%;
 
-    --destructive: 0 63% 31%;
+    --destructive: 0, 84%, 69%;
     --destructive-foreground: 210 40% 98%;
 
     --ring: 216 34% 17%;

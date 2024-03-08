@@ -8,7 +8,6 @@
 <script>
 import detectEthereumProvider from '@metamask/detect-provider'
 import { useWalletStore } from '@/stores/walletStore'
-import { useMessageStore } from '@/stores/messageStore'
 import { ref } from 'vue'
 import Web3listener from '@/lib/web3listener'
 import Web3Service from '@/lib/web3service'
@@ -21,7 +20,6 @@ export default {
 
   setup() {
     const walletStore = useWalletStore()
-    const messageStore = useMessageStore()
     const gameStore = useGameStore()
     const buttonText = ref('Connect with MetaMask')
 

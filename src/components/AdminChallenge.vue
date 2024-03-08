@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { CIRCLE_SIZE } from '../lib/utils'
+import { useMouse, useMouseInElement } from '@vueuse/core'
+import { ElNotification } from 'element-plus'
 
 interface FileWithPreview extends File {
   preview?: string
@@ -18,13 +20,14 @@ defineProps({
 const emit = defineEmits()
 
 const fileInput = ref<HTMLInputElement | null>(null)
-const imageContainer = ref<HTMLDivElement>()
+const imageContainer = ref()
+const errorMessage = ref('')
 const selectCoordinates = ref(false)
 const selectedFiles = ref<FileWithPreview[]>([])
 const position = ref({ x1: 0, x2: 0, y1: 0, y2: 0 })
 const center = ref({ x: 0, y: 0 })
-let isDragging = false
-let lastMousePosition = { x1: 0, y1: 0 }
+
+const mouse = reactive(useMouseInElement(imageContainer))
 
 const browseFiles = () => {
   fileInput?.value?.click()
@@ -71,53 +74,30 @@ const handleDrop = (event: DragEvent) => {
   }
 }
 
-function startDrag(event) {
-  isDragging = true
-  lastMousePosition = getMousePosition(event)
-}
+const handleClick = () => {
+  if (mouse.isOutside) {
+    return
+  }
 
-function handleDrag(event) {
-  if (!isDragging) return
+  position.value.x1 = mouse.elementX - CIRCLE_SIZE / 2
+  position.value.x2 = position.value.x1 + CIRCLE_SIZE
+  position.value.y1 = mouse.elementY - CIRCLE_SIZE / 2
+  position.value.y2 = position.value.y1 + CIRCLE_SIZE
+  center.value.x = position.value.x1 + CIRCLE_SIZE / 2
+  center.value.y = position.value.y1 + CIRCLE_SIZE / 2
 
-  const currentMousePosition = getMousePosition(event)
-
-  const deltaX = currentMousePosition.x1 - lastMousePosition.x1
-  const deltaY = currentMousePosition.y1 - lastMousePosition.y1
-
-  const containerRect = imageContainer.value?.getBoundingClientRect()
-  // only update position if it's within the bounds
   if (
-    containerRect &&
-    position.value.x1 + deltaX >= 0 &&
-    position.value.x2 + deltaX <= containerRect.width &&
-    position.value.y1 + deltaY >= 0 &&
-    position.value.y2 + deltaY <= containerRect.height
+    position.value.x1 < 0 ||
+    position.value.y1 < 0 ||
+    position.value.x2 > mouse.elementWidth ||
+    position.value.y2 > mouse.elementHeight
   ) {
-    position.value.x1 += deltaX
-    position.value.x2 = position.value.x1 + CIRCLE_SIZE
-    position.value.y1 += deltaY
-    position.value.y2 = position.value.y1 + CIRCLE_SIZE
-
-    //Center of the Bounding box
-    center.value.x = position.value.x1 + CIRCLE_SIZE / 2;
-    center.value.y = position.value.y1 + CIRCLE_SIZE / 2;
-
-    lastMousePosition = currentMousePosition
-
-    emit('positionChange', position.value)
-    emit('centerChange', center.value)
+    errorMessage.value = "Can't place the circle outside the image. Please select a valid position"
+    return
   }
-}
 
-function stopDrag() {
-  isDragging = false
-}
-
-function getMousePosition(event) {
-  return {
-    x1: event.clientX || event.touches[0].clientX,
-    y1: event.clientY || event.touches[0].clientY
-  }
+  emit('positionChange', position.value)
+  emit('centerChange', center.value)
 }
 </script>
 
@@ -134,7 +114,14 @@ function getMousePosition(event) {
       </button>
     </div>
     <div class="w-full flex py-20 justify-center">
-      <div class="max-w-[800px] h-fit w-full" ref="imageContainer">
+      <div class="max-w-[800px] h-fit w-full">
+        <div
+          class="flex flex-col justify-center items-center gap-4 mb-4"
+          v-if="selectedFiles.length < 2"
+        >
+          <h2 class="text-2xl font-bold">Please</h2>
+          <p>Upload the private image first then upload the public image</p>
+        </div>
         <div
           @dragover.prevent="handleDragOver"
           @drop.prevent="handleDrop"
@@ -147,9 +134,12 @@ function getMousePosition(event) {
               class="flex justify-center items-center flex-col gap-4"
             >
               <img src="../assets/cloud-upload.png" alt="" width="40" height="40" />
-              <p class="font-bold">Drop or Select files</p>
+              <p class="font-bold">Drop or Select Private File</p>
+              <small class="font-bold">
+                File should be in .jpg, .jpeg or .png format and less than 1MB</small
+              >
               <p class="text-sm">
-                Drop files here or click
+                Drop private file here or click
                 <span @click="browseFiles" class="text-green-900 font-bold underline cursor-pointer"
                   >browse</span
                 >
@@ -160,53 +150,43 @@ function getMousePosition(event) {
               <img src="../assets/cloud-upload.png" alt="" width="40" height="40" />
               <p class="text-sm">
                 <span @click="browseFiles" class="text-green-900 font-bold underline cursor-pointer"
-                  >Add files</span
+                  >Add public image</span
                 >
               </p>
             </div>
             <input
               ref="fileInput"
               type="file"
-              style="display: none"
+              class="hidden"
               @change="handleFileChange"
-              multiple
+              accept=".jpg, .png, .jpeg"
+              size="1048576"
             />
           </div>
         </div>
 
-        <div v-if="selectedFiles.length">
-          <div class="mt-4">
-            <button
-              class="py-2 px-6 rounded-lg bg-neutral-900 text-white"
-              @click="selectCoordinates = true"
-            >
-              Select Coordinates
-            </button>
-          </div>
-
-          <div class="w-full mt-4 flex flex-col gap-4">
-            <div v-for="(file, index) in selectedFiles" :key="index" class="w-full relative">
-              <img :src="file.preview" alt="Selected Preview" class="w-full block" />
-
-              <div class="w-full h-full absolute top-0 left-0">
-                <div
-                  @mousedown="startDrag"
-                  @mousemove="handleDrag"
-                  @mouseup="stopDrag"
-                  @touchstart="startDrag"
-                  @touchmove="handleDrag"
-                  @touchend="stopDrag"
-                  v-if="selectCoordinates && index === 0"
-                  class="border-[4px] border-white rounded-full cursor-grab"
-                  :style="{
-                    width: `${CIRCLE_SIZE}px`,
-                    height: `${CIRCLE_SIZE}px`,
-                    transform: `translate(${position.x1}px, ${position.y1}px)`
-                  }"
-                ></div>
-              </div>
+        <div class="w-full mt-4 flex flex-col gap-4" v-if="selectedFiles[0]">
+          <el-alert :title="errorMessage" type="error" class="font-bold" v-if="errorMessage" />
+          <el-card class="w-[800px] mx-auto relative overflow-hidden rounded-lg cursor-grab">
+            <div ref="imageContainer">
+              <img
+                :src="selectedFiles[0].preview"
+                alt="Spot the ball"
+                class="w-full h-full block"
+              />
             </div>
-          </div>
+            <div
+              class="absolute border-[4px] border-white rounded-full"
+              :style="{
+                width: `${CIRCLE_SIZE}px`,
+                height: `${CIRCLE_SIZE}px`,
+                top: `${mouse.isOutside ? '50%' : `${mouse.elementY - CIRCLE_SIZE / 2}px`}`,
+                left: `${mouse.isOutside ? '50%' : `${mouse.elementX - CIRCLE_SIZE / 2}px`}`,
+                transform: `${mouse.isOutside ? 'translate(-50%,-50%)' : ''}`
+              }"
+              @click="handleClick"
+            ></div>
+          </el-card>
         </div>
       </div>
     </div>

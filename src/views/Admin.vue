@@ -9,7 +9,7 @@
         :index="index"
         :challenge="challenge"
         @remove="removeChallenge(index)"
-        @fileChange="addFilessToChallenge($event, index)"
+        @fileChange="addFilesToChallenge($event, index)"
         @positionChange="addPositionToChallenge($event, index)"
       />
 
@@ -36,7 +36,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useGameStore } from '../stores/gameStore'
-import Challenge from '../components/Challenge.vue'
+import Challenge from '../components/AdminChallenge.vue'
 import AdminHeader from '../components/AdminHeader.vue'
 import Web3Service from '../lib/web3service'
 import { useWalletStore } from '../stores/walletStore'
@@ -65,7 +65,7 @@ const removeChallenge = (index) => {
   })
 }
 
-const addFilessToChallenge = (files, index) => {
+const addFilesToChallenge = (files, index) => {
   challenges.value[index].selectedFiles = files
 }
 

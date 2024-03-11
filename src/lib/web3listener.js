@@ -4,15 +4,17 @@ import ImageGuessGameJson from '@/assets/contract/artifacts/contracts/ImageGuess
 import ContractAddress from '@/assets/contract/address.json'
 import { handleMetaMaskError, bigNumberToNumber } from './utils'
 import { useGameStore } from '../stores/gameStore'
+import { ElNotification } from 'element-plus'
 
 export default class Web3listener {
   constructor(signer) {
     const messageStore = useMessageStore()
     this.contract = new ethers.Contract(ContractAddress.address, ImageGuessGameJson.abi, signer)
     this.lastGuessCount = ethers.BigNumber.from(0)
-    messageStore.addMessage(
-      `[ImageGuessGame Contract] Contract Address: ${ContractAddress.address}`
-    )
+    // ElNotification({
+    //   message: `[ImageGuessGame Contract] Contract Address: ${ContractAddress.address}`,
+    //   type: 'success'
+    // })
 
     this.startCheckingPublicChallenge()
     this.startCheckingHistory()

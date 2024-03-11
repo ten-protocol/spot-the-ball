@@ -6,6 +6,7 @@ import { useWalletStore } from '../stores/walletStore'
 import { useMessageStore } from '../stores/messageStore'
 import { Challenge, FormattedChallenge, Game, PreviousWins } from '../types.js'
 import { MORALIS_API_KEY, NFT_UP_API_KEY, bigNumberToNumber, formatTimeAgo } from '../lib/utils.js'
+import { ElNotification } from 'element-plus'
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
@@ -20,7 +21,8 @@ export const useGameStore = defineStore('gameStore', {
     isGameActive: false,
     isGameRevealed: false,
     timeLeft: 0,
-    previousWins: [] as PreviousWins[]
+    previousWins: [] as PreviousWins[],
+    etherPrice: 0
   }),
 
   getters: {},
@@ -45,7 +47,11 @@ export const useGameStore = defineStore('gameStore', {
       const messageStore = useMessageStore()
       try {
         if (!walletStore.signer) {
-          messageStore.addMessage('Not connected with Metamask...')
+          ElNotification({
+            title: 'Error',
+            message: 'Not connected with Metamask...',
+            type: 'error'
+          })
           return
         }
         const web3service = new Web3Service(walletStore.signer)
@@ -100,10 +106,13 @@ export const useGameStore = defineStore('gameStore', {
 
     async createChallenge(challenges: Challenge[]) {
       const walletStore = useWalletStore()
-      const messageStore = useMessageStore()
       try {
         if (!walletStore.signer) {
-          messageStore.addMessage('Not connected with Metamask...')
+          ElNotification({
+            title: 'Error',
+            message: 'Not connected with Metamask...',
+            type: 'error'
+          })
           return
         }
         const web3service = new Web3Service(walletStore.signer)
@@ -142,9 +151,15 @@ export const useGameStore = defineStore('gameStore', {
           uploadedChallenges.push({
             privateImageURL: uploadToIpfsRes[i][0].path,
             publicImageURL: uploadToIpfsRes[i][1].path,
-            topLeft: [challenges[i].position.x1, challenges[i].position.y1],
-            bottomRight: [challenges[i].position.x2, challenges[i].position.y2],
-            centerPoint: [challenges[i].position.center.x, challenges[i].position.center.y]
+            topLeft: [Math.round(challenges[i].position.x1), Math.round(challenges[i].position.y1)],
+            bottomRight: [
+              Math.round(challenges[i].position.x2),
+              Math.round(challenges[i].position.y2)
+            ],
+            centerPoint: [
+              Math.round(challenges[i].position.center.x),
+              Math.round(challenges[i].position.center.y)
+            ]
           })
         }
 
@@ -160,13 +175,17 @@ export const useGameStore = defineStore('gameStore', {
       const messageStore = useMessageStore()
       try {
         if (!walletStore.signer) {
-          messageStore.addMessage('Not connected with Metamask...')
+          ElNotification({
+            title: 'Error',
+            message: 'Not connected with Metamask...',
+            type: 'error'
+          })
           return
         }
         const web3service = new Web3Service(walletStore.signer)
         const res = await web3service.getChallengePublicInfo()
         this.game = res
-        this.timeLeft = formatTimeAgo(bigNumberToNumber(res?.[4] || 0), false)
+        this.timeLeft = bigNumberToNumber(res?.[4])
         this.isGameActive = res?.[1]
         this.isGameRevealed = res?.[2]
       } catch (error) {
@@ -177,15 +196,29 @@ export const useGameStore = defineStore('gameStore', {
     async getPreviousWins() {
       try {
         const walletStore = useWalletStore()
-        const messageStore = useMessageStore()
         if (!walletStore.signer) {
-          messageStore.addMessage('Not connected with Metamask...')
+          ElNotification({
+            title: 'Error',
+            message: 'Not connected with Metamask...',
+            type: 'error'
+          })
           return
         }
         const web3service = new Web3Service(walletStore.signer)
         const res = await web3service.getPreviousWins()
         this.previousWins = res
         return res
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    async fetchEtherPrice() {
+      const url = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+      try {
+        const response = await fetch(url)
+        const data = await response.json()
+        this.etherPrice = data.ethereum.usd
       } catch (error) {
         console.error(error)
       }

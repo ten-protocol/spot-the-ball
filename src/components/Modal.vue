@@ -7,7 +7,7 @@
       <h2 class="text-2xl font-bold">{{ title }}</h2>
       <p class="whitespace-pre-wrap mt-4">{{ message }}</p>
       <div class="flex justify-end">
-        <button class="mt-4 py-2 px-4 bg-slate-900 text-foreground rounded-lg" @click="hideModal">
+        <button class="mt-4 py-2 px-4 bg-foreground text-background rounded-lg" @click="hideModal">
           Close
         </button>
       </div>

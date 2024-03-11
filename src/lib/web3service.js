@@ -46,7 +46,7 @@ export default class Web3Service {
 
   async submitGuess(challengeId, [coordinateX, coordinateY]) {
     // ensuring that coordinatex and coordinatey are not fractional components but whole numbers
-    const updatedCoordinates = [coordinateX, coordinateY]
+    const updatedCoordinates = [Math.round(coordinateX), Math.round(coordinateY)]
 
     const entryCost = ethers.utils.parseEther(Common.ENTRY_COST)
 
@@ -105,7 +105,6 @@ export default class Web3Service {
       return formattedChallengeId
     } catch (error) {
       console.error('Failed to get challenge id - ', error)
-      messageStore.addMessage('Failed to get challenge id - ' + error.reason + ' ...')
     }
   }
 
@@ -143,14 +142,12 @@ export default class Web3Service {
   }
 
   async getChallengePublicInfo() {
-    const messageStore = useMessageStore()
     try {
       const challengeId = await this.getChallengeId()
       const challenge = await this.contract.getChallengePublicInfo(challengeId)
       return challenge
     } catch (error) {
       console.error('Failed to get challenge properties - ', error)
-      messageStore.addMessage('Failed to get challenge properties - ' + error.reason + ' ...')
     }
   }
 

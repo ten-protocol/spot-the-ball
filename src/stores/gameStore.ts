@@ -106,7 +106,6 @@ export const useGameStore = defineStore('gameStore', {
 
     async createChallenge(challenges: Challenge[]) {
       const walletStore = useWalletStore()
-      const messageStore = useMessageStore()
       try {
         if (!walletStore.signer) {
           ElNotification({
@@ -152,9 +151,15 @@ export const useGameStore = defineStore('gameStore', {
           uploadedChallenges.push({
             privateImageURL: uploadToIpfsRes[i][0].path,
             publicImageURL: uploadToIpfsRes[i][1].path,
-            topLeft: [challenges[i].position.x1, challenges[i].position.y1],
-            bottomRight: [challenges[i].position.x2, challenges[i].position.y2],
-            centerPoint: [challenges[i].position.center.x, challenges[i].position.center.y]
+            topLeft: [Math.round(challenges[i].position.x1), Math.round(challenges[i].position.y1)],
+            bottomRight: [
+              Math.round(challenges[i].position.x2),
+              Math.round(challenges[i].position.y2)
+            ],
+            centerPoint: [
+              Math.round(challenges[i].position.center.x),
+              Math.round(challenges[i].position.center.y)
+            ]
           })
         }
 

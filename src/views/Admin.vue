@@ -9,7 +9,7 @@
         :index="index"
         :challenge="challenge"
         @remove="removeChallenge(index)"
-        @fileChange="addFilessToChallenge($event, index)"
+        @fileChange="addFilesToChallenge($event, index)"
         @positionChange="addPositionToChallenge($event, index)"
       />
 
@@ -65,7 +65,7 @@ const removeChallenge = (index) => {
   })
 }
 
-const addFilessToChallenge = (files, index) => {
+const addFilesToChallenge = (files, index) => {
   challenges.value[index].selectedFiles = files
 }
 

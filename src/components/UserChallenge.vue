@@ -7,6 +7,7 @@ import { useGameStore } from '../stores/gameStore'
 import { useWalletStore } from '../stores/walletStore'
 
 defineProps<{
+  timeLeft: number
   game: string[]
   gameRevealed: boolean
   showPreviousMoves: boolean
@@ -51,15 +52,24 @@ const submit = async () => {
 </script>
 
 <template>
+  <el-alert
+    v-if="timeLeft <= 0"
+    title="Time's up!"
+    type="info"
+    description="The game is over. Please wait for the next game to start."
+    show-icon
+    class="w-[800px] mx-auto relative overflow-hidden rounded-lg mb-4"
+  ></el-alert>
+
   <el-card class="w-[800px] mx-auto relative overflow-hidden rounded-lg cursor-pointer">
     <img
       :src="game[0]"
       alt="Spot the ball"
-      :class="{ 'w-full h-full block': game, 'cursor-not-allowed': gameRevealed }"
+      :class="{ 'w-full h-full block': game, 'cursor-not-allowed': gameRevealed || timeLeft <= 0 }"
       ref="imageContainer"
     />
     <div
-      v-if="!gameRevealed && game[0] && !gameStore.loading"
+      v-if="!gameRevealed && game[0] && !gameStore.loading && timeLeft > 0"
       class="absolute border-[4px] border-white rounded-full"
       :style="{
         width: `${circleSize}px`,

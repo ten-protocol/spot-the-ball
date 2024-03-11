@@ -24,8 +24,6 @@ const errorMessage = ref('')
 const coordinatesSelected = ref(false)
 const selectCoordinates = ref(true)
 const selectedFiles = ref<FileWithPreview[]>([])
-const position = ref({ x1: 0, x2: 0, y1: 0, y2: 0 })
-const center = ref({ x: 0, y: 0 })
 
 const mouse = reactive(useMouseInElement(imageContainer))
 
@@ -75,11 +73,9 @@ const handleDrop = (event: DragEvent) => {
 }
 
 const select = () => {
-  selectCoordinates.value = !selectCoordinates.value
-
-  if (selectCoordinates.value) {
-    coordinatesSelected.value = false
-  }
+  selectCoordinates.value = true
+  coordinatesSelected.value = false
+  errorMessage.value = ''
 }
 
 const handleClick = (event: MouseEvent) => {
@@ -94,28 +90,22 @@ const handleClick = (event: MouseEvent) => {
 
   coordinatesSelected.value = true
 
-  position.value.x1 = mouse.elementX - CIRCLE_SIZE / 2
-  position.value.x2 = position.value.x1 + CIRCLE_SIZE
-  position.value.y1 = mouse.elementY - CIRCLE_SIZE / 2
-  position.value.y2 = position.value.y1 + CIRCLE_SIZE
-  center.value.x = position.value.x1 + CIRCLE_SIZE / 2
-  center.value.y = position.value.y1 + CIRCLE_SIZE / 2
-
-  if (
-    position.value.x1 < 0 ||
-    position.value.y1 < 0 ||
-    position.value.x2 > mouse.elementWidth ||
-    position.value.y2 > mouse.elementHeight
-  ) {
-    errorMessage.value = "Can't place the circle outside the image. Please select a valid position"
-    return
+  const position = {
+    x1: mouse.elementX - CIRCLE_SIZE / 2,
+    x2: mouse.elementX - CIRCLE_SIZE / 2 + CIRCLE_SIZE,
+    y1: mouse.elementY - CIRCLE_SIZE / 2,
+    y2: mouse.elementY - CIRCLE_SIZE / 2 + CIRCLE_SIZE
   }
 
-  errorMessage.value = ''
-  selectCoordinates.value = false
+  const center = {
+    x: position.x1 + CIRCLE_SIZE / 2,
+    y: position.y1 + CIRCLE_SIZE / 2
+  }
 
-  emit('positionChange', position.value)
-  emit('centerChange', center.value)
+  emit('positionChange', position)
+  emit('centerChange', center)
+
+  selectCoordinates.value = false
 }
 </script>
 
@@ -183,9 +173,23 @@ const handleClick = (event: MouseEvent) => {
           </div>
         </div>
 
+        <!-- public image preview and button to remove and reupload -->
+        <template v-if="selectedFiles[1]">
+          <el-card class="w-[800px] mx-auto relative overflow-hidden rounded-lg">
+            <div class="flex justify-between">
+              <p>
+                {{ selectedFiles[1].name }}
+              </p>
+              <el-icon @click="selectedFiles.splice(1, 1)" class="cursor-pointer">
+                <Close />
+              </el-icon>
+            </div>
+          </el-card>
+        </template>
+
         <div class="w-full mt-4 flex flex-col gap-4" v-if="selectedFiles[0]">
           <div>
-            <el-button type="primary" @click="select" :disabled="selectCoordinates">
+            <el-button type="primary" plain @click="select" :disabled="selectCoordinates">
               Select Coordinates</el-button
             >
           </div>

@@ -3,6 +3,7 @@
   <div class="max-w-[1300px] mx-auto w-full p-6">
     <template v-if="game?.[0] && !gameRevealed">
       <UserChallenge
+        :timeLeft="timeLeft"
         :game="game"
         :gameRevealed="gameRevealed"
         :showPreviousMoves="showPreviousMoves"
@@ -23,6 +24,7 @@ import UserChallenge from './UserChallenge.vue'
 const gameStore = useGameStore()
 
 const game = ref()
+const timeLeft = ref(gameStore.timeLeft)
 const gameActive = ref(gameStore.isGameActive)
 const gameRevealed = ref(gameStore.isGameRevealed)
 const isUserConnected = ref(gameStore.isUserConnected)
@@ -36,5 +38,6 @@ watchEffect(() => {
   gameRevealed.value = gameStore.isGameRevealed
   gameActive.value = gameStore.isGameActive
   isUserConnected.value = gameStore.isUserConnected
+  timeLeft.value = gameStore.timeLeft
 })
 </script>

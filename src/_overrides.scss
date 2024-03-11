@@ -87,6 +87,10 @@
   border-color: hsl(var(--border));
 }
 
+.el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
+  background-color: hsl(var(--muted));
+}
+
 * {
   @apply border-border;
 }

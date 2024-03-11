@@ -67,6 +67,7 @@ export default {
         await gameStore.getHistory()
         await gameStore.getGame()
         await gameStore.fetchEtherPrice()
+        await gameStore.getPreviousWins()
       } else {
         console.error('Please install MetaMask!')
         gameStore.isUserConnected = false

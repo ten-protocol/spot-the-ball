@@ -49,7 +49,6 @@ export default class Web3Service {
     const updatedCoordinates = [coordinateX, coordinateY]
 
     const entryCost = ethers.utils.parseEther(Common.ENTRY_COST)
-    const messageStore = useMessageStore()
 
     // ElNotification({
     //   message: 'Issuing Guess...',

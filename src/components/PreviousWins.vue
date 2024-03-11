@@ -26,11 +26,13 @@
     <el-table-column align="center" label="Action" width="200">
       <template #default="scope">
         <el-button
+          primary
           size="small"
           @click="convertImageToBase64(scope.row.privateImageURL)"
           class="cursor-pointer"
         >
           Preview
+          <View />
         </el-button>
       </template>
     </el-table-column>
@@ -42,13 +44,13 @@
     class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50"
     v-if="imagePreview"
   >
-    <div class="bg-white p-8 rounded-lg relative w-3/4">
+    <div class="bg-background dark:border-2 p-8 rounded-lg relative w-3/4">
       <el-icon
-        class="-top-4 -right-4 cursor-pointer bg-foreground rounded-full"
+        class="-top-4 -right-4 cursor-pointer bg-background dark:border-2 rounded-full"
         @click="closeImageModal"
         style="position: absolute; width: 40px; height: 40px"
       >
-        <Close class="text-white" />
+        <Close class="text-foreground" />
       </el-icon>
       <img :src="imagePreview" alt="winning image" />
     </div>
@@ -56,25 +58,21 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useGameStore } from '../stores/gameStore'
 
 const gameStore = useGameStore()
 
 const previousWins = ref(gameStore.previousWins)
-const showImagePreview = ref(false)
 const imagePreview = ref()
 
 watchEffect(() => {
   previousWins.value = gameStore.previousWins
 })
 
-onMounted(async () => {
-  await gameStore.getPreviousWins()
-})
-
 const convertImageToBase64 = async (imageURL) => {
   try {
+    gameStore.loading = true
     const response = await fetch(imageURL)
     const blob = await response.blob()
     const reader = new FileReader()
@@ -85,6 +83,8 @@ const convertImageToBase64 = async (imageURL) => {
     }
   } catch (error) {
     console.error(error)
+  } finally {
+    gameStore.loading = false
   }
 }
 

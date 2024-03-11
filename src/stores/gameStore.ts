@@ -191,7 +191,6 @@ export const useGameStore = defineStore('gameStore', {
     async getPreviousWins() {
       try {
         const walletStore = useWalletStore()
-        const messageStore = useMessageStore()
         if (!walletStore.signer) {
           ElNotification({
             title: 'Error',

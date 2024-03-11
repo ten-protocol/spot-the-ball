@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { CIRCLE_SIZE } from '../lib/utils'
-import { useMouse, useMouseInElement } from '@vueuse/core'
-import { ElNotification } from 'element-plus'
+import { useMouseInElement } from '@vueuse/core'
 
 interface FileWithPreview extends File {
   preview?: string
@@ -121,7 +120,7 @@ const handleClick = (event: MouseEvent) => {
 </script>
 
 <template>
-  <details class="bg-gray-100 rounded-lg p-4">
+  <details class="bg-background border rounded-lg p-4">
     <summary class="cursor-pointer">Challenge {{ index + 1 }}</summary>
 
     <div class="flex justify-end">
@@ -144,7 +143,7 @@ const handleClick = (event: MouseEvent) => {
         <div
           @dragover.prevent="handleDragOver"
           @drop.prevent="handleDrop"
-          class="p-8 rounded-xl border border-dashed border-neutral-300 bg-neutral-100"
+          class="p-8 rounded-xl border border-dashed bg-background"
           v-if="selectedFiles.length < 2"
         >
           <div class="input">

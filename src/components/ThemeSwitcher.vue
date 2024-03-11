@@ -1,37 +1,32 @@
 <template>
-  <el-button type="text" size="small">
+  <el-button type="text" size="small" class="border">
     <Sunny
       class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
-      @click="setTheme('light')"
+      @click="toggleDark()"
+      v-if="!isDark"
     />
     <Moon
       class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
-      @click="setTheme('dark')"
+      @click="toggleDark()"
+      v-if="isDark"
     />
     <span class="sr-only">Toggle theme</span>
   </el-button>
 </template>
   
- 
-  
-  
 <script lang="ts" >
-import { ref } from 'vue'
+import { useDark, useToggle } from '@vueuse/core'
 
 export default {
   name: 'ThemeSwitcher',
 
   setup() {
-    const theme = ref('light')
-
-    const setTheme = (value: string) => {
-      theme.value = value
-      document.documentElement.setAttribute('data-theme', value)
-    }
+    const isDark = useDark()
+    const toggleDark = useToggle(isDark)
 
     return {
-      theme,
-      setTheme
+      isDark,
+      toggleDark
     }
   }
 }

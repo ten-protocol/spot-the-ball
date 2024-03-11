@@ -1,5 +1,5 @@
 <template>
-  <div class="relative mt-4">
+  <div class="relative mt-4 w-[800px] mx-auto">
     <el-empty description=" " image="/assets/images/meeting-landscape.png" image-size="800" />
 
     <!-- Dark transparent cover -->
@@ -26,7 +26,7 @@
       </template>
       <div class="flex flex-col items-center">
         <p class="font-bold">No challenge available</p>
-        <p class="font-bold">Please connect your wallet</p>
+        <!-- <p class="font-bold">Please connect your wallet</p> -->
       </div>
     </div>
   </div>

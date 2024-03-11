@@ -3,7 +3,8 @@ import Home from '../views/Home.vue'
 import Auth from '../views/Auth.vue'
 import Admin from '../views/Admin.vue'
 
-const base = '/sample-applications/spot-the-ball/'
+// const base = '/sample-applications/spot-the-ball/'
+const base = ''
 
 const router = createRouter({
   history: createWebHistory(base),

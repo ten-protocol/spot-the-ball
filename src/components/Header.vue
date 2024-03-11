@@ -1,7 +1,7 @@
 <template>
   <el-menu
     :default-active="activeIndex"
-    class="flex items-center justify-between"
+    class="flex items-center justify-between p-4 bg-background"
     mode="horizontal"
     :ellipsis="false"
     @select="handleSelect"

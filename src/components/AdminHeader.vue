@@ -1,7 +1,6 @@
 <template>
   <el-menu
-    :default-active="activeIndex"
-    class="flex items-center justify-between"
+    class="flex items-center justify-between bg-background p-4"
     mode="horizontal"
     :ellipsis="false"
     @select="handleSelect"
@@ -16,7 +15,7 @@
     <div class="flex-grow" />
     <ThemeSwitcher />
     <MetaMaskConnectButton />
-    <el-button @click="handleLogout">Logout</el-button>
+    <el-button @click="handleLogout" round>Logout</el-button>
   </el-menu>
 </template>
 

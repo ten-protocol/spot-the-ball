@@ -1,0 +1,176 @@
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': hsl(6, 61%, 64%)
+    ),
+    'success': (
+      'base': hsl(169, 54%, 54%)
+    ),
+    'warning': (
+      'base': hsl(45, 80%, 50%)
+    ),
+    'danger': (
+      'base': hsl(0, 84%, 69%)
+    ),
+    'error': (
+      'base': hsl(0, 84%, 69%)
+    ),
+    'info': (
+      'base': hsl(215, 20.2%, 65.1%)
+    ),
+    'bg-color': (
+      'base': hsl(0, 0%, 100%)
+    )
+  ),
+  $text-color: (
+    'primary': hsl(var(--primary-foreground)),
+    'success': hsl(var(--success-foreground)),
+    'warning': hsl(var(--warning-foreground)),
+    'danger': hsl(var(--destructive-foreground)),
+    'error': hsl(var(--destructive-foreground)),
+    'info': hsl(var(--ring-foreground))
+  ),
+  $border-color: (
+    'primary': hsl(var(--primary-border)),
+    'success': hsl(var(--success-border)),
+    'warning': hsl(var(--warning-border)),
+    'danger': hsl(var(--destructive-border)),
+    'error': hsl(var(--destructive-border)),
+    'info': hsl(var(--ring-border))
+  ),
+  $bg-color: (
+    '': hsl(var(--background)),
+    'page': hsl(var(--background)),
+    'overlay': hsl(var(--background))
+  ),
+  $card: (
+    'border-color': hsl(var(--border)),
+    'bg-color': hsl(var(--background))
+  )
+);
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.el-statistic__content span.el-statistic__number {
+  font-size: 32px;
+  line-height: 48px;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+}
+
+.el-tabs__nav-scroll,
+.el-table__header,
+.el-table tr,
+.el-table th.el-table__cell.is-leaf,
+.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active {
+  background-color: hsl(var(--background));
+}
+
+.el-table th.el-table__cell.is-leaf {
+  border-color: hsl(var(--border));
+}
+
+.el-tabs__header .el-tabs__nav,
+.el-tabs__header .el-tabs__item .is-active,
+.el-tabs__header .el-tabs__item {
+  border-color: hsl(var(--border)) !important;
+}
+
+.el-table__inner-wrapper::before {
+  background-color: hsl(var(--background));
+}
+
+.el-card {
+  background-color: hsl(var(--card));
+  border-color: hsl(var(--border));
+}
+
+* {
+  @apply border-border;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 6, 61%, 64%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 6, 61%, 64%;
+
+    --primary: 6, 61%, 64%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 6, 61%, 64%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 6, 61%, 64%;
+
+    --success: 169, 54%, 54%;
+    --success-foreground: 210 40% 98%;
+
+    --warning: 45 80% 50%;
+    --warning-foreground: 0 0% 20%;
+
+    --destructive: 0, 84%, 69%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
+    --radius: 0.5rem;
+
+    --brand-yellow: 32 61% 64%;
+    --brand-green: 156 18% 65%;
+    --brand-pink: 328 87% 69%;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --popover: 224 71% 4%;
+    --popover-foreground: 215 20.2% 65.1%;
+
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 1.2%;
+
+    --secondary: 6, 61%, 64%;
+    --secondary-foreground: 210 40% 98%;
+
+    --success: 169, 54%, 54%;
+    --success-foreground: 210 40% 98%;
+
+    --warning: 45 80% 40%;
+    --warning-foreground: 0 0% 80%;
+
+    --destructive: 0, 84%, 69%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 216 34% 17%;
+
+    --radius: 0.5rem;
+  }
+}

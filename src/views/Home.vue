@@ -6,7 +6,7 @@
       </el-header>
       <el-main>
         <div class="flex justify-between items-center gap-4">
-          <el-card style="max-width: 480px">
+          <el-card style="max-width: 480px" class="bg-background text-foreground border">
             <div class="flex items-center justify-between">
               <div class="-ml-6">
                 <img src="/assets/images/encrypted-ethereum-logo.png" alt="Ethereum Logo" />
@@ -14,31 +14,31 @@
               <div class="flex flex-col items-center">
                 <p>ETH Balance (Total pool)</p>
                 <h1 class="font-bold text-4xl brand-text">
-                  {{ isUserConnected ? prizePool : '-' }} ETH
+                  {{ isUserConnected ? prizePool + 'ETH' : '-' }}
                 </h1>
                 <p class="text-12 text-center">
                   {{
                     isUserConnected
                       ? etherPrice + ' ETH/1 USD'
-                      : 'Connect Wallet to View Total Pool'
+                      : 'Connect wallet to view total pool'
                   }}
                 </p>
               </div>
             </div>
           </el-card>
           <div class="flex flex-col items-center gap-4">
-            <el-card style="width: 280px">
+            <el-card style="width: 280px" class="bg-background">
               <div class="flex items-center justify-between">
-                <div class="flex flex-col items-center">
+                <div class="flex flex-col items-center text-foreground">
                   <template v-if="isUserConnected">
                     <h1 class="font-bold text-4xl">
-                      <el-countdown :value="Date.now() + 1000 * timeLeft" />
+                      <el-countdown :value="Date.now() + 1000 * timeLeft" class="text-forground" />
                     </h1>
                     <small class="text-12">Time Remaining</small>
                   </template>
                   <template v-else>
                     <h1 class="font-bold text-4xl brand-text">-</h1>
-                    <small class="text-10">Connect Wallet to View Count Down</small>
+                    <small class="text-12">Connect wallet to view countdown</small>
                   </template>
                 </div>
                 <div class="-mr-6 -mt-6 ml-3">

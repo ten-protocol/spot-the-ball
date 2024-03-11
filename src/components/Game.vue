@@ -17,9 +17,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { useGameStore } from '../stores/gameStore'
-import Web3Service from '../lib/web3service'
-import { useMessageStore } from '../stores/messageStore'
-import { useWalletStore } from '../stores/walletStore'
 import EmptyState from './EmptyState.vue'
 import UserChallenge from './UserChallenge.vue'
 
@@ -28,7 +25,6 @@ const gameStore = useGameStore()
 const game = ref()
 const gameActive = ref(gameStore.isGameActive)
 const gameRevealed = ref(gameStore.isGameRevealed)
-const submitDisabled = ref(false)
 const isUserConnected = ref(gameStore.isUserConnected)
 const HISTORY = ref(gameStore.history)
 const showPreviousMoves = ref(gameStore.showPreviousMoves)

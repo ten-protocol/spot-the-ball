@@ -1,5 +1,9 @@
 <template>
-  <el-table :data="previousWins" :default-sort="{ prop: 'name', order: 'descending' }">
+  <el-table
+    :data="previousWins"
+    :default-sort="{ prop: 'name', order: 'descending' }"
+    class="bg-background text-foreground w-full"
+  >
     <el-table-column
       prop="name"
       label="Name"

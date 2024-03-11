@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { useMouse, useMouseInElement } from '@vueuse/core'
+import { useMouseInElement } from '@vueuse/core'
 import { CIRCLE_SIZE } from '../lib/utils'
 import Web3Service from '../lib/web3service'
 import { useGameStore } from '../stores/gameStore'
-import { useMessageStore } from '../stores/messageStore'
 import { useWalletStore } from '../stores/walletStore'
 
 defineProps<{
@@ -18,7 +17,6 @@ const imageContainer = ref()
 const circleSize = CIRCLE_SIZE
 
 const gameStore = useGameStore()
-const messageStore = useMessageStore()
 const walletStore = useWalletStore()
 
 const mouse = reactive(useMouseInElement(imageContainer))

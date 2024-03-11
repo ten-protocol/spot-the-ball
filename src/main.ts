@@ -1,9 +1,9 @@
-import './main.css'
+import './main.scss'
 
 import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import './_overrides.css'
+import './_overrides.scss'
 import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'

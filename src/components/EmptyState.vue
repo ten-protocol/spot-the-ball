@@ -7,7 +7,7 @@
 
     <div class="absolute inset-0 flex flex-col items-center justify-center text-white gap-4 p-6">
       <template v-if="!isUserConnected">
-        <el-card style="max-width: 350px">
+        <el-card style="max-width: 350px" class="bg-background text-foreground border">
           <div class="flex flex-col items-center">
             <h4>Authenticate Account</h4>
             <p class="text-12 text-center">

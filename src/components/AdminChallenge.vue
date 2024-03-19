@@ -78,8 +78,14 @@ const select = () => {
   errorMessage.value = ''
 }
 
+const remove = (index: number) => {
+  selectedFiles.value = []
+  emit('remove', index)
+}
+
 const handleClick = (event: MouseEvent) => {
   event.preventDefault()
+
   if (mouse.isOutside) {
     return
   }
@@ -89,7 +95,7 @@ const handleClick = (event: MouseEvent) => {
   }
 
   coordinatesSelected.value = true
-
+  console.log('mouse', mouse)
   const position = {
     x1: mouse.elementX - CIRCLE_SIZE / 2,
     x2: mouse.elementX - CIRCLE_SIZE / 2 + CIRCLE_SIZE,
@@ -97,14 +103,8 @@ const handleClick = (event: MouseEvent) => {
     y2: mouse.elementY - CIRCLE_SIZE / 2 + CIRCLE_SIZE
   }
 
-  const center = {
-    x: position.x1 + CIRCLE_SIZE / 2,
-    y: position.y1 + CIRCLE_SIZE / 2
-  }
-
   emit('positionChange', position)
-  emit('centerChange', center)
-
+  console.log('position', position)
   selectCoordinates.value = false
 }
 </script>
@@ -114,10 +114,7 @@ const handleClick = (event: MouseEvent) => {
     <summary class="cursor-pointer">Challenge {{ index + 1 }}</summary>
 
     <div class="flex justify-end">
-      <button
-        @click="index > 1 ? emit('remove') : (selectedFiles = [])"
-        class="text-red-900 font-bold underline cursor-pointer"
-      >
+      <button @click="remove(index)" class="text-red-900 font-bold underline cursor-pointer">
         Remove
       </button>
     </div>

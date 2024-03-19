@@ -19,7 +19,7 @@
                 <p class="text-12 text-center">
                   {{
                     isUserConnected
-                      ? etherPrice + ' ETH/1 USD'
+                      ? etherPrice + ' USD/1 ETH'
                       : 'Connect wallet to view total pool'
                   }}
                 </p>

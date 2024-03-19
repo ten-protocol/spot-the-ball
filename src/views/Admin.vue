@@ -77,7 +77,6 @@ const addPositionToChallenge = (position, index) => {
     ...position,
     center: { x: centerX, y: centerY }
   }
-  console.log('challenges', challenges.value)
 }
 
 const addAdmin = async () => {

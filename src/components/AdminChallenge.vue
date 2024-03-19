@@ -95,7 +95,6 @@ const handleClick = (event: MouseEvent) => {
   }
 
   coordinatesSelected.value = true
-  console.log('mouse', mouse)
   const position = {
     x1: mouse.elementX - CIRCLE_SIZE / 2,
     x2: mouse.elementX - CIRCLE_SIZE / 2 + CIRCLE_SIZE,
@@ -104,7 +103,6 @@ const handleClick = (event: MouseEvent) => {
   }
 
   emit('positionChange', position)
-  console.log('position', position)
   selectCoordinates.value = false
 }
 </script>

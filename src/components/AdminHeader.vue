@@ -15,7 +15,6 @@
     <div class="flex-grow" />
     <ThemeSwitcher />
     <MetaMaskConnectButton />
-    <el-button @click="handleLogout" round>Logout</el-button>
   </el-menu>
 </template>
 
@@ -36,28 +35,11 @@ export default {
     const handleSelect = (key: string, keyPath: string[]) => {
       console.log(key, keyPath)
     }
-    const handleLogout = () => {
-      localStorage.removeItem('isAdmin')
-      window.location.reload()
-    }
 
     return {
-      handleLogout,
       headerText,
       activeIndex,
       handleSelect
-    }
-  },
-  created() {
-    if (!localStorage.getItem('isAdmin')) {
-      this.$router.push('/auth')
-    }
-  },
-  watch: {
-    $route(to) {
-      if (!localStorage.getItem('isAdmin')) {
-        this.$router.push('/auth')
-      }
     }
   }
 }

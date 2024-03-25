@@ -67,11 +67,16 @@ contract ImageGuessGame {
 
   /// @notice Contract constructor to initialize state.
   /// @param _entryFee The fee required to submit a guess.
-  constructor(uint256 _entryFee) {
+  /// @param _admins An array of addresses to be added as admins.
+  constructor(uint256 _entryFee, address[] memory _admins) {
     owner = msg.sender;
     admins[owner] = true;
     entryFee = _entryFee;
     currentChallengeIndex = 0;
+
+    for (uint256 i = 0; i < _admins.length; i++) {
+      admins[_admins[i]] = true;
+    }
   }
 
   modifier onlyOwner() {

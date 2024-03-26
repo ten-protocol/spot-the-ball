@@ -5,7 +5,7 @@
         <Header />
       </el-header>
       <el-main>
-        <div class="flex justify-between items-center gap-4">
+        <div class="flex flex-wrap justify-between items-center gap-4">
           <el-card style="max-width: 480px" class="bg-background text-foreground border">
             <div class="flex items-center justify-between">
               <div class="-ml-6">

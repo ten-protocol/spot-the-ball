@@ -58,41 +58,46 @@ const submit = async () => {
     type="info"
     description="The game is over. Please wait for the next game to start."
     show-icon
-    class="w-[800px] mx-auto relative overflow-hidden rounded-lg mb-4"
+    class="max-w-[800px] mx-auto relative overflow-hidden rounded-lg mb-4"
   ></el-alert>
 
-  <el-card class="w-[800px] mx-auto relative overflow-hidden rounded-lg cursor-pointer">
-    <img
-      :src="game[0]"
-      alt="Spot the ball"
-      :class="{ 'w-full h-full block': game, 'cursor-not-allowed': gameRevealed || timeLeft <= 0 }"
-      ref="imageContainer"
-    />
-    <div
-      v-if="!gameRevealed && game[0] && !gameStore.loading && timeLeft > 0"
-      class="absolute border-[4px] border-white rounded-full"
-      :style="{
-        width: `${circleSize}px`,
-        height: `${circleSize}px`,
-        top: `${mouse.isOutside ? '50%' : `${mouse.elementY - circleSize / 2}px`}`,
-        left: `${mouse.isOutside ? '50%' : `${mouse.elementX - circleSize / 2}px`}`,
-        transform: `${mouse.isOutside ? 'translate(-50%,-50%)' : ''}`
-      }"
-      @click="submit"
-    ></div>
-    <template v-if="showPreviousMoves && history">
+  <div class="overflow-x-auto">
+    <el-card class="w-[800px] mx-auto relative overflow-hidden rounded-lg cursor-pointer">
+      <img
+        :src="game[0]"
+        alt="Spot the ball"
+        :class="{
+          'w-full h-full block': game,
+          'cursor-not-allowed': gameRevealed || timeLeft <= 0
+        }"
+        ref="imageContainer"
+      />
       <div
-        v-for="(move, index) in history"
-        :key="index"
+        v-if="!gameRevealed && game[0] && !gameStore.loading && timeLeft > 0"
         class="absolute border-[4px] border-white rounded-full"
         :style="{
           width: `${circleSize}px`,
           height: `${circleSize}px`,
-          top: `${move.y - circleSize / 2}px`,
-          left: `${move.x - circleSize / 2}px`,
-          background: move.win === true ? 'hsl(var(--success)' : 'hsl(var(--destructive)'
+          top: `${mouse.isOutside ? '50%' : `${mouse.elementY - circleSize / 2}px`}`,
+          left: `${mouse.isOutside ? '50%' : `${mouse.elementX - circleSize / 2}px`}`,
+          transform: `${mouse.isOutside ? 'translate(-50%,-50%)' : ''}`
         }"
+        @click="submit"
       ></div>
-    </template>
-  </el-card>
+      <template v-if="showPreviousMoves && history">
+        <div
+          v-for="(move, index) in history"
+          :key="index"
+          class="absolute border-[4px] border-white rounded-full"
+          :style="{
+            width: `${circleSize}px`,
+            height: `${circleSize}px`,
+            top: `${move.y - circleSize / 2}px`,
+            left: `${move.x - circleSize / 2}px`,
+            background: move.win === true ? 'hsl(var(--success)' : 'hsl(var(--destructive)'
+          }"
+        ></div>
+      </template>
+    </el-card>
+  </div>
 </template>

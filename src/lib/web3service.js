@@ -161,6 +161,7 @@ export default class Web3Service {
     } catch (error) {
       console.error('Failed to add admin - ', error)
       messageStore.addMessage('Failed to add admin - ' + error.reason + ' ...')
+      throw error
     }
   }
 

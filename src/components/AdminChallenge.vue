@@ -204,12 +204,12 @@ const handleClick = (event: MouseEvent) => {
                 height: `${CIRCLE_SIZE}px`,
                 top: `${
                   coordinatesSelected
-                    ? `${challenge.position.center.y - CIRCLE_SIZE / 2}px`
+                    ? `${challenge?.position.center.y - CIRCLE_SIZE / 2}px`
                     : `${mouse.elementY - CIRCLE_SIZE / 2}px`
                 }`,
                 left: `${
                   coordinatesSelected
-                    ? `${challenge.position.center.x - CIRCLE_SIZE / 2}px`
+                    ? `${challenge?.position.center.x - CIRCLE_SIZE / 2}px`
                     : `${mouse.elementX - CIRCLE_SIZE / 2}px`
                 }`
               }"

@@ -1,8 +1,8 @@
 <template>
   <div>
     <AdminHeader />
+
     <div class="flex flex-col gap-4 p-4">
-      <button class="hidden" @click="addAdmin">Add admin</button>
       <Challenge
         v-for="(challenge, index) in challenges"
         :key="index"
@@ -30,6 +30,16 @@
         </button>
       </div>
     </div>
+
+    <form class="flex items-center w-[50%] mx-auto gap-4 p-4" @submit.prevent="addAdmin">
+      <el-input
+        v-model="address"
+        placeholder="Enter address to add as admin"
+        class="w-full"
+        size="large"
+      />
+      <el-button type="primary" native-type="submit" size="large"> Add Admin </el-button>
+    </form>
   </div>
 </template>
   
@@ -40,6 +50,8 @@ import Challenge from '../components/AdminChallenge.vue'
 import AdminHeader from '../components/AdminHeader.vue'
 import Web3Service from '../lib/web3service'
 import { useWalletStore } from '../stores/walletStore'
+
+const address = ref('')
 
 const challenges = ref([
   {
@@ -80,11 +92,16 @@ const addPositionToChallenge = (position, index) => {
 }
 
 const addAdmin = async () => {
-  const walletStore = useWalletStore()
-  const web3Service = new Web3Service(walletStore.signer)
-  const address = ''
-  const res = await web3Service.addAdmin(address)
-  return res
+  try {
+    const walletStore = useWalletStore()
+    const web3Service = new Web3Service(walletStore.signer)
+    const res = await web3Service.addAdmin(address.value)
+    console.log(res)
+    alert('Admin added successfully: ' + address.value)
+  } catch (error) {
+    console.error(error)
+    alert('Error adding admin: ' + error.message)
+  }
 }
 
 async function handleUpload() {

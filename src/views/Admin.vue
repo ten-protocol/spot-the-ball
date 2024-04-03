@@ -92,15 +92,16 @@ const addPositionToChallenge = (position, index) => {
 }
 
 const addAdmin = async () => {
+  const gameStore = useGameStore()
+  gameStore.loading = true
   try {
-    const walletStore = useWalletStore()
-    const web3Service = new Web3Service(walletStore.signer)
-    const res = await web3Service.addAdmin(address.value)
-    console.log(res)
+    const res = await gameStore.addAdmin(address.value)
     alert('Admin added successfully: ' + address.value)
   } catch (error) {
     console.error(error)
     alert('Error adding admin: ' + error.message)
+  } finally {
+    gameStore.loading = false
   }
 }
 

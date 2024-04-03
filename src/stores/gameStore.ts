@@ -104,6 +104,25 @@ export const useGameStore = defineStore('gameStore', {
       }
     },
 
+    async addAdmin(address: string) {
+      const walletStore = useWalletStore()
+      try {
+        if (!walletStore.signer) {
+          ElNotification({
+            title: 'Error',
+            message: 'Not connected with Metamask...',
+            type: 'error'
+          })
+          return
+        }
+        const web3service = new Web3Service(walletStore.signer)
+        const res = await web3service.addAdmin(address)
+        return res
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
     async createChallenge(challenges: Challenge[]) {
       const walletStore = useWalletStore()
       try {
